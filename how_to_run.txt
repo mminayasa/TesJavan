@@ -1,0 +1,9 @@
+How to run
+
+1. ensure node installed in your local machine
+2. clone repository
+3. create database with postgressql. you can use db.config.js as reference
+4. run sql scripts family_users.sql and family_user_assets.sql
+5. run command npm install 
+6. run command npm run serve
+7. import postman collections, copy url from postmancollection.json
