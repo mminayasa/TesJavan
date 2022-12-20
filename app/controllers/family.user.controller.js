@@ -2,6 +2,7 @@ const { default: axios } = require('axios')
 const db = require('../models')
 const FamilyUser = db.family_users
 const FamilyUserAsset = db.family_user_assets
+const Op = db.Sequelize.Op
 
 // create a new family users
 exports.create = (req, res) => {
@@ -63,9 +64,9 @@ exports.create_children = (req, res) => {
 // get all family user
 exports.findAll = (req, res) => {
     const parent_id = req.query.parent_id;
-    var condition = parent_id ? parent_id : null;
+    var condition = parent_id ? { parent_id: parent_id } : null;;
 
-    FamilyUser.findAll({ where: { parent_id: condition } })
+    FamilyUser.findAll({ where: condition })
         .then(data => {
             res.send(data);
         })

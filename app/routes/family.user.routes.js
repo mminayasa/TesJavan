@@ -21,6 +21,9 @@ module.exports = app => {
     // Retrieve a single Family with id
     router.get("/:id", family_users.findOne);
 
+    // Delete a Family with id
+    router.delete("/:id", family_users.delete);
+
     // create asset of family users
     router.post("/:id/assets", family_users.createAsset)
 
