@@ -1,3 +1,4 @@
+const { default: axios } = require('axios')
 const db = require('../models')
 const FamilyUser = db.family_users
 const FamilyUserAsset = db.family_user_assets
@@ -21,7 +22,7 @@ exports.create = (req, res) => {
     // save a family
     FamilyUser.create(family_user)
         .then(data => {
-            res.send(data)
+            res.status(201).send(data)
         })
         .catch(err => {
             res.status(500).send({
@@ -175,14 +176,28 @@ exports.findFamilyWithAsset = (familyUserId) => {
 };
 
 // get the assets for a given asset id
-exports.findAssetById = (id) => {
-    return FamilyUserAsset.findByPk(id, { include: ["family_user"] })
-        .then((asset) => {
-            return asset;
-        })
-        .catch((err) => {
-            console.log(">> Error while finding asset: ", err);
-        });
+exports.findAssetById = async (req, res) => {
+    const id = req.params.id
+    try {
+        const asset = await FamilyUserAsset.findByPk(id, { include: ["family_user"] })
+        const response = await axios.get(`https://dummyjson.com/products/search?q=${asset.asset_name}`)
+        const { products } = response.data
+
+        console.log(products);
+        let totalPrice = products[0].price - (products[0].price * (products[0].discountPercentage / 100))
+
+        const result = {
+            data: {
+                asset_name: asset.asset_name,
+                total_price: totalPrice
+            }
+        }
+
+        res.send(result)
+    } catch (error) {
+        console.log(">> Error while fetching asset: ", error);
+    }
+
 };
 
 exports.findAllWithAsset = (req, res) => {
@@ -193,5 +208,11 @@ exports.findAllWithAsset = (req, res) => {
     });
 };
 
+exports.totalPrice = (req, res) => {
+    axios.get('https://dummyjson.com/products/search?q=iPhone 9').then(response => {
+        console.log(response.data)
+        res.send(response.data)
+    })
+}
 
 

@@ -24,6 +24,9 @@ module.exports = app => {
     // create asset of family users
     router.post("/:id/assets", family_users.createAsset)
 
+    // get assets
+    router.get('/assets/:id', family_users.findAssetById)
+
 
     app.use('/api/family-users', router)
 }
